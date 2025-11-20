@@ -6,6 +6,7 @@
       <list>
         <option value="$PROJECT_DIR$/MyPetStore-SSM-Dev/pom.xml" />
         <option value="$PROJECT_DIR$/ManagePetStore-SSM-Dev/pom.xml" />
+        <option value="$PROJECT_DIR$/MyPetStore-SSM-Dev/MyPetStore-UserService/pom.xml" />
       </list>
     </option>
   </component>

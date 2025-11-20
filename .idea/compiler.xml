@@ -10,9 +10,14 @@
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.30/lombok-1.18.30.jar" />
         </processorPath>
         <module name="MyPetStore-SSM-Dev" />
+        <module name="MyPetStore-UserService" />
         <module name="ManagePetStore-SSM-Dev (1)" />
         <module name="ManagePetStore-SSM-Dev" />
-        <module name="ManagePetStore-SSM-Dev (2)" />
+      </profile>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
       </profile>
     </annotationProcessing>
   </component>
@@ -22,6 +27,7 @@
       <module name="ManagePetStore-SSM-Dev (1)" options="-parameters" />
       <module name="ManagePetStore-SSM-Dev (2)" options="-parameters" />
       <module name="MyPetStore-SSM-Dev" options="-parameters" />
+      <module name="MyPetStore-UserService" options="-parameters" />
     </option>
   </component>
 </project>
