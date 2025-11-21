@@ -29,7 +29,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/auth/login","/api/v1/account","/api/v1/auth/login/forget"
                         ,"/carts","/carts/{itemId}","/favouriteList","/orders","/orders/{orderId}"
-                        ,"/addresses/{addressId}","/orders/addresses", "/catalog/**", "/images/**", "/api/v1/auth/tokens/current")
+                        ,"/addresses/{addressId}","/orders/addresses", "/catalog/**", "/images/**", "/api/v1/auth/tokens/current"
+                        ,"/swagger-ui.html","/swagger-ui/**","/v3/api-docs/**","/api/v1/inner/**")
                         .permitAll()
                         .anyRequest().authenticated()
                 ).addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
