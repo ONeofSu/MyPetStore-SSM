@@ -1,0 +1,28 @@
+version: '3'
+services:
+  # MySQL 配置
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=123456 # 记得改成你的密码
+    restart: always # 【关键】开机自启
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+
+  # Nacos 配置
+  nacos:
+    image: nacos/nacos-server:v2.5.2
+    container_name: nacos
+    ports:
+      - "8848:8848"
+      - "9848:9848"
+    environment:
+      - MODE=standalone
+    restart: always # 【关键】开机自启
+    depends_on:
+      - mysql # 告诉 Docker：先启动 MySQL，再启动 Nacos (虽然单机模式Nacos不强依赖MySQL，但这是好习惯)
+
+# 启动指令
+# sudo docker-compose up -d

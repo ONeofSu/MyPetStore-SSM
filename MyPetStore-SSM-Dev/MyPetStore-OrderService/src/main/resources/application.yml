@@ -1,0 +1,26 @@
+server:
+  port: 8083 # 确保不和 8080/8081/8082 冲突
+
+spring:
+  application:
+    name: order-service # 服务名
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848 # 如果 Nacos 在 Docker，这里填宿主机 IP
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/mypetstore-ssm?useSSL=false&serverTimezone=UTC
+    username: root
+    password: 123456
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      id-type: auto
+
+logging:
+  level:
+    com.csu.mypetstoreorderservice: debug

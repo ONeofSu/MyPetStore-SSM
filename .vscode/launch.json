@@ -1,0 +1,34 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-MyPetStoreProductServiceApplication<com.csu-MyPetStore-ProductService>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.csu.mypetstoreproductservice.MyPetStoreProductServiceApplication",
+            "projectName": "com.csu-MyPetStore-ProductService",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-MyPetStoreUserServiceApplication<com.csu-MyPetStore-UserService>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.csu.mypetstoreuserservice.MyPetStoreUserServiceApplication",
+            "projectName": "com.csu-MyPetStore-UserService",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-PetStoreGateWayApplication<org.csu.petstore-gateway-service>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "org.csu.petstore.PetStoreGateWayApplication",
+            "projectName": "org.csu.petstore-gateway-service",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
