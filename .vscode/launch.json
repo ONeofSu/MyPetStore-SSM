@@ -29,6 +29,16 @@
             "projectName": "org.csu.petstore-gateway-service",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-MyPetStoreOrderServiceApplication<MyPetStore-OrderService>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.csu.mypetstoreorderservice.MyPetStoreOrderServiceApplication",
+            "projectName": "MyPetStore-OrderService",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
         }
     ]
 }

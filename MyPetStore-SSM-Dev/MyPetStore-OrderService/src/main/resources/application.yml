@@ -28,3 +28,16 @@ mybatis-plus:
 logging:
   level:
     com.csu.mypetstoreorderservice: debug
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+  api-docs:
+    path: /v3/api-docs
+  group-configs:
+    - group: '订单服务'
+      paths-to-match: '/**'
+      packages-to-scan: com.csu.mypetstoreorderservice.controller
+      # MyPetStore-SSM-Dev/MyPetStore-OrderService/src/main/java/com/csu/mypetstoreorderservice/controller

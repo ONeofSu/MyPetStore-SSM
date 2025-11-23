@@ -25,4 +25,4 @@ services:
       - mysql # 告诉 Docker：先启动 MySQL，再启动 Nacos (虽然单机模式Nacos不强依赖MySQL，但这是好习惯)
 
 # 启动指令
-# sudo docker-compose up -d
+# sudo docker rm -f mysql nacos && sudo docker-compose up -d
