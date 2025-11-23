@@ -20,9 +20,9 @@ spring:
             - Path=/api/user/** # 断言：如果请求路径以 /api/user/ 开头，就转发给用户服务
 
         # --- 路由配置 2：转发到商品服务 ---
-        - id: catalog-route
-          uri: lb://petstore-catalog-service
+        - id: product-route
+          uri: lb://MyPetStore-ProductService
           predicates:
-            - Path=/api/catalog/**
+            - Path=/api/v1/products/**
           filters:
-            - StripPrefix=1
+            - StripPrefix=0
