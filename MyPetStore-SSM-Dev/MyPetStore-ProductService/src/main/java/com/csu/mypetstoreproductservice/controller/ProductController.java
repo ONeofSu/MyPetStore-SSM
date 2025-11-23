@@ -7,54 +7,61 @@ import com.csu.mypetstoreproductservice.service.ProductService;
 import com.csu.mypetstoreproductservice.vo.CategoryVO;
 import com.csu.mypetstoreproductservice.vo.ItemVO;
 import com.csu.mypetstoreproductservice.vo.ProductVO;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * 商品服务控制器
+ * 对外提供的商品服务接口（供前端、网关调用）
+ */
 @RestController
 @RequestMapping("/api/v1/products")
+@Tag(name = "商品服务", description = "对外提供的商品服务接口")
 public class ProductController {
 
     @Autowired
     private ProductService productService;
 
-    // GET - 获取所有分类
     @GetMapping("/categories")
+    @Operation(summary = "获取所有分类")
     public ResponseEntity<CommonResponse<List<String>>> getCategories() {
         return ResponseEntity.ok(CommonResponse.createForSuccess(productService.getCategories()));
     }
 
-    // GET - 获取所有语言
     @GetMapping("/languages")
+    @Operation(summary = "获取所有语言")
     public ResponseEntity<CommonResponse<List<String>>> getLanguages() {
         return ResponseEntity.ok(CommonResponse.createForSuccess(productService.getLanguages()));
     }
 
-    // GET - 根据分类ID获取分类信息
     @GetMapping("/categories/{categoryId}")
+    @Operation(summary = "根据分类ID获取分类信息")
     public ResponseEntity<CommonResponse<CategoryVO>> getCategory(@PathVariable String categoryId) {
         CategoryVO category = productService.getCategory(categoryId);
         return ResponseEntity.ok(CommonResponse.createForSuccess(category));
     }
 
-    // GET - 根据商品ID获取商品信息
     @GetMapping("/{productId}")
+    @Operation(summary = "根据商品ID获取商品信息")
     public ResponseEntity<CommonResponse<ProductVO>> getProduct(@PathVariable String productId) {
         ProductVO product = productService.getProduct(productId);
         return ResponseEntity.ok(CommonResponse.createForSuccess(product));
     }
 
-    // GET - 根据商品ID获取商品下的所有Item
     @GetMapping("/{productId}/items")
+    @Operation(summary = "根据商品ID获取商品下的所有Item")
     public ResponseEntity<CommonResponse<List<Item>>> getItemsByProduct(@PathVariable String productId) {
         List<Item> items = productService.getItemListByProduct(productId);
         return ResponseEntity.ok(CommonResponse.createForSuccess(items));
     }
 
-    // GET - 根据Item ID获取Item详情
     @GetMapping("/items/{itemId}")
+    @Operation(summary = "根据Item ID获取Item详情")
     public ResponseEntity<CommonResponse<ItemVO>> getItem(@PathVariable String itemId) {
         ItemVO item = productService.getItem(itemId);
         if (item != null) {
@@ -63,29 +70,29 @@ public class ProductController {
         return ResponseEntity.ok(CommonResponse.createForError("Item not found"));
     }
 
-    // GET - 根据关键词搜索商品
     @GetMapping("/search")
+    @Operation(summary = "根据关键词搜索商品")
     public ResponseEntity<CommonResponse<List<Product>>> searchProducts(@RequestParam String keyword) {
         List<Product> products = productService.getProductList(keyword);
         return ResponseEntity.ok(CommonResponse.createForSuccess(products));
     }
 
-    // GET - 根据分类ID获取该分类下的所有商品
     @GetMapping("/categories/{categoryId}/products")
+    @Operation(summary = "根据分类ID获取该分类下的所有商品")
     public ResponseEntity<CommonResponse<List<Product>>> getProductsByCategory(@PathVariable String categoryId) {
         List<Product> products = productService.getProductListByCategory(categoryId);
         return ResponseEntity.ok(CommonResponse.createForSuccess(products));
     }
 
-    // GET - 检查Item是否有库存
     @GetMapping("/items/{itemId}/stock")
+    @Operation(summary = "检查Item是否有库存")
     public ResponseEntity<CommonResponse<Boolean>> checkItemStock(@PathVariable String itemId) {
         boolean inStock = productService.isItemInStock(itemId);
         return ResponseEntity.ok(CommonResponse.createForSuccess(inStock));
     }
 
-    // GET - 检查Item数量是否足够
     @GetMapping("/items/{itemId}/quantity")
+    @Operation(summary = "检查Item数量是否足够")
     public ResponseEntity<CommonResponse<Boolean>> checkItemQuantity(
             @PathVariable String itemId,
             @RequestParam int quantity) {
@@ -93,8 +100,8 @@ public class ProductController {
         return ResponseEntity.ok(CommonResponse.createForSuccess(enough));
     }
 
-    // POST - 创建新商品
     @PostMapping
+    @Operation(summary = "创建新商品")
     public ResponseEntity<CommonResponse<Product>> createProduct(@RequestBody Product product) {
         try {
             // 参数校验
@@ -117,8 +124,8 @@ public class ProductController {
         }
     }
 
-    // PUT - 更新商品信息
     @PutMapping("/{productId}")
+    @Operation(summary = "更新商品信息")
     public ResponseEntity<CommonResponse<Product>> updateProduct(
             @PathVariable String productId,
             @RequestBody Product product) {
@@ -140,8 +147,8 @@ public class ProductController {
         }
     }
 
-    // DELETE - 删除商品
     @DeleteMapping("/{productId}")
+    @Operation(summary = "删除商品")
     public ResponseEntity<CommonResponse<String>> deleteProduct(@PathVariable String productId) {
         try {
             // 参数校验
