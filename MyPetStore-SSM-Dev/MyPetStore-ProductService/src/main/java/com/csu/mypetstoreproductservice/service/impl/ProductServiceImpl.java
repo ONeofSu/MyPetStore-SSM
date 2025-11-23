@@ -152,11 +152,6 @@ public class ProductServiceImpl implements ProductService {
             throw new RuntimeException("无效的分类ID: " + product.getCategoryId());
         }
         
-        // 设置默认值
-        if (product.getModifying() == 0) {
-            product.setModifying(0); // 默认值
-        }
-        
         // 插入商品
         int result = productMapper.insert(product);
         if (result > 0) {

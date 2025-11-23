@@ -1,5 +1,6 @@
 package com.csu.mypetstoreproductservice.controller;
 
+import com.csu.mypetstoreproductservice.common.CommonResponse;
 import com.csu.mypetstoreproductservice.entity.Item;
 import com.csu.mypetstoreproductservice.entity.Product;
 import com.csu.mypetstoreproductservice.service.ProductService;
@@ -21,143 +22,143 @@ public class ProductController {
 
     // GET - 获取所有分类
     @GetMapping("/categories")
-    public ResponseEntity<List<String>> getCategories() {
-        return ResponseEntity.ok(productService.getCategories());
+    public ResponseEntity<CommonResponse<List<String>>> getCategories() {
+        return ResponseEntity.ok(CommonResponse.createForSuccess(productService.getCategories()));
     }
 
     // GET - 获取所有语言
     @GetMapping("/languages")
-    public ResponseEntity<List<String>> getLanguages() {
-        return ResponseEntity.ok(productService.getLanguages());
+    public ResponseEntity<CommonResponse<List<String>>> getLanguages() {
+        return ResponseEntity.ok(CommonResponse.createForSuccess(productService.getLanguages()));
     }
 
     // GET - 根据分类ID获取分类信息
     @GetMapping("/categories/{categoryId}")
-    public ResponseEntity<CategoryVO> getCategory(@PathVariable String categoryId) {
+    public ResponseEntity<CommonResponse<CategoryVO>> getCategory(@PathVariable String categoryId) {
         CategoryVO category = productService.getCategory(categoryId);
-        return ResponseEntity.ok(category);
+        return ResponseEntity.ok(CommonResponse.createForSuccess(category));
     }
 
     // GET - 根据商品ID获取商品信息
     @GetMapping("/{productId}")
-    public ResponseEntity<ProductVO> getProduct(@PathVariable String productId) {
+    public ResponseEntity<CommonResponse<ProductVO>> getProduct(@PathVariable String productId) {
         ProductVO product = productService.getProduct(productId);
-        return ResponseEntity.ok(product);
+        return ResponseEntity.ok(CommonResponse.createForSuccess(product));
     }
 
     // GET - 根据商品ID获取商品下的所有Item
     @GetMapping("/{productId}/items")
-    public ResponseEntity<List<Item>> getItemsByProduct(@PathVariable String productId) {
+    public ResponseEntity<CommonResponse<List<Item>>> getItemsByProduct(@PathVariable String productId) {
         List<Item> items = productService.getItemListByProduct(productId);
-        return ResponseEntity.ok(items);
+        return ResponseEntity.ok(CommonResponse.createForSuccess(items));
     }
 
     // GET - 根据Item ID获取Item详情
     @GetMapping("/items/{itemId}")
-    public ResponseEntity<ItemVO> getItem(@PathVariable String itemId) {
+    public ResponseEntity<CommonResponse<ItemVO>> getItem(@PathVariable String itemId) {
         ItemVO item = productService.getItem(itemId);
         if (item != null) {
-            return ResponseEntity.ok(item);
+            return ResponseEntity.ok(CommonResponse.createForSuccess(item));
         }
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(CommonResponse.createForError("Item not found"));
     }
 
     // GET - 根据关键词搜索商品
     @GetMapping("/search")
-    public ResponseEntity<List<Product>> searchProducts(@RequestParam String keyword) {
+    public ResponseEntity<CommonResponse<List<Product>>> searchProducts(@RequestParam String keyword) {
         List<Product> products = productService.getProductList(keyword);
-        return ResponseEntity.ok(products);
+        return ResponseEntity.ok(CommonResponse.createForSuccess(products));
     }
 
     // GET - 根据分类ID获取该分类下的所有商品
     @GetMapping("/categories/{categoryId}/products")
-    public ResponseEntity<List<Product>> getProductsByCategory(@PathVariable String categoryId) {
+    public ResponseEntity<CommonResponse<List<Product>>> getProductsByCategory(@PathVariable String categoryId) {
         List<Product> products = productService.getProductListByCategory(categoryId);
-        return ResponseEntity.ok(products);
+        return ResponseEntity.ok(CommonResponse.createForSuccess(products));
     }
 
     // GET - 检查Item是否有库存
     @GetMapping("/items/{itemId}/stock")
-    public ResponseEntity<Boolean> checkItemStock(@PathVariable String itemId) {
+    public ResponseEntity<CommonResponse<Boolean>> checkItemStock(@PathVariable String itemId) {
         boolean inStock = productService.isItemInStock(itemId);
-        return ResponseEntity.ok(inStock);
+        return ResponseEntity.ok(CommonResponse.createForSuccess(inStock));
     }
 
     // GET - 检查Item数量是否足够
     @GetMapping("/items/{itemId}/quantity")
-    public ResponseEntity<Boolean> checkItemQuantity(
+    public ResponseEntity<CommonResponse<Boolean>> checkItemQuantity(
             @PathVariable String itemId,
             @RequestParam int quantity) {
         boolean enough = productService.checkItemQuantity(itemId, quantity);
-        return ResponseEntity.ok(enough);
+        return ResponseEntity.ok(CommonResponse.createForSuccess(enough));
     }
 
     // POST - 创建新商品
     @PostMapping
-    public ResponseEntity<?> createProduct(@RequestBody Product product) {
+    public ResponseEntity<CommonResponse<Product>> createProduct(@RequestBody Product product) {
         try {
             // 参数校验
             if (product.getProductId() == null || product.getProductId().trim().isEmpty()) {
-                return ResponseEntity.badRequest().body("商品ID不能为空");
+                return ResponseEntity.ok(CommonResponse.createForError("商品ID不能为空"));
             }
             if (product.getName() == null || product.getName().trim().isEmpty()) {
-                return ResponseEntity.badRequest().body("商品名称不能为空");
+                return ResponseEntity.ok(CommonResponse.createForError("商品名称不能为空"));
             }
             if (product.getCategoryId() == null || product.getCategoryId().trim().isEmpty()) {
-                return ResponseEntity.badRequest().body("分类ID不能为空");
+                return ResponseEntity.ok(CommonResponse.createForError("分类ID不能为空"));
             }
             
             Product createdProduct = productService.createProduct(product);
-            return ResponseEntity.status(201).body(createdProduct);
+            return ResponseEntity.ok(CommonResponse.createForSuccess(createdProduct));
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.ok(CommonResponse.createForError(e.getMessage()));
         } catch (Exception e) {
-            return ResponseEntity.status(500).body("创建商品时发生错误: " + e.getMessage());
+            return ResponseEntity.ok(CommonResponse.createForError("创建商品时发生错误: " + e.getMessage()));
         }
     }
 
     // PUT - 更新商品信息
     @PutMapping("/{productId}")
-    public ResponseEntity<?> updateProduct(
+    public ResponseEntity<CommonResponse<Product>> updateProduct(
             @PathVariable String productId,
             @RequestBody Product product) {
         try {
             // 参数校验
             if (productId == null || productId.trim().isEmpty()) {
-                return ResponseEntity.badRequest().body("商品ID不能为空");
+                return ResponseEntity.ok(CommonResponse.createForError("商品ID不能为空"));
             }
             if (product.getName() == null || product.getName().trim().isEmpty()) {
-                return ResponseEntity.badRequest().body("商品名称不能为空");
+                return ResponseEntity.ok(CommonResponse.createForError("商品名称不能为空"));
             }
             
             Product updatedProduct = productService.updateProduct(productId, product);
-            return ResponseEntity.ok(updatedProduct);
+            return ResponseEntity.ok(CommonResponse.createForSuccess(updatedProduct));
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.ok(CommonResponse.createForError(e.getMessage()));
         } catch (Exception e) {
-            return ResponseEntity.status(500).body("更新商品时发生错误: " + e.getMessage());
+            return ResponseEntity.ok(CommonResponse.createForError("更新商品时发生错误: " + e.getMessage()));
         }
     }
 
     // DELETE - 删除商品
     @DeleteMapping("/{productId}")
-    public ResponseEntity<?> deleteProduct(@PathVariable String productId) {
+    public ResponseEntity<CommonResponse<String>> deleteProduct(@PathVariable String productId) {
         try {
             // 参数校验
             if (productId == null || productId.trim().isEmpty()) {
-                return ResponseEntity.badRequest().body("商品ID不能为空");
+                return ResponseEntity.ok(CommonResponse.createForError("商品ID不能为空"));
             }
             
             boolean deleted = productService.deleteProduct(productId);
             if (deleted) {
-                return ResponseEntity.noContent().build();
+                return ResponseEntity.ok(CommonResponse.createForSuccess("删除成功"));
             } else {
-                return ResponseEntity.status(500).body("删除商品失败");
+                return ResponseEntity.ok(CommonResponse.createForError("删除商品失败"));
             }
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.ok(CommonResponse.createForError(e.getMessage()));
         } catch (Exception e) {
-            return ResponseEntity.status(500).body("删除商品时发生错误: " + e.getMessage());
+            return ResponseEntity.ok(CommonResponse.createForError("删除商品时发生错误: " + e.getMessage()));
         }
     }
 }
