@@ -20,5 +20,14 @@ public interface ProductService {
     List<Item> getItemListByProduct(String productId);
     List<ItemVO> getItemVOListByProduct(String productId);
     boolean checkItemQuantity(String itemId, int quantity);
+    
+    // 创建商品
+    Product createProduct(Product product);
+    
+    // 更新商品
+    Product updateProduct(String productId, Product product);
+    
+    // 删除商品
+    boolean deleteProduct(String productId);
 }
 

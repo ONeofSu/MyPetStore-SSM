@@ -92,27 +92,73 @@ public class ProductController {
         return ResponseEntity.ok(enough);
     }
 
-    // POST - 创建新商品（示例，可根据实际需求实现）
+    // POST - 创建新商品
     @PostMapping
-    public ResponseEntity<Product> createProduct(@RequestBody Product product) {
-        // 这里需要实现创建逻辑，暂时返回示例
-        return ResponseEntity.ok(product);
+    public ResponseEntity<?> createProduct(@RequestBody Product product) {
+        try {
+            // 参数校验
+            if (product.getProductId() == null || product.getProductId().trim().isEmpty()) {
+                return ResponseEntity.badRequest().body("商品ID不能为空");
+            }
+            if (product.getName() == null || product.getName().trim().isEmpty()) {
+                return ResponseEntity.badRequest().body("商品名称不能为空");
+            }
+            if (product.getCategoryId() == null || product.getCategoryId().trim().isEmpty()) {
+                return ResponseEntity.badRequest().body("分类ID不能为空");
+            }
+            
+            Product createdProduct = productService.createProduct(product);
+            return ResponseEntity.status(201).body(createdProduct);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("创建商品时发生错误: " + e.getMessage());
+        }
     }
 
-    // PUT - 更新商品信息（示例，可根据实际需求实现）
+    // PUT - 更新商品信息
     @PutMapping("/{productId}")
-    public ResponseEntity<Product> updateProduct(
+    public ResponseEntity<?> updateProduct(
             @PathVariable String productId,
             @RequestBody Product product) {
-        // 这里需要实现更新逻辑，暂时返回示例
-        return ResponseEntity.ok(product);
+        try {
+            // 参数校验
+            if (productId == null || productId.trim().isEmpty()) {
+                return ResponseEntity.badRequest().body("商品ID不能为空");
+            }
+            if (product.getName() == null || product.getName().trim().isEmpty()) {
+                return ResponseEntity.badRequest().body("商品名称不能为空");
+            }
+            
+            Product updatedProduct = productService.updateProduct(productId, product);
+            return ResponseEntity.ok(updatedProduct);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("更新商品时发生错误: " + e.getMessage());
+        }
     }
 
-    // DELETE - 删除商品（示例，可根据实际需求实现）
+    // DELETE - 删除商品
     @DeleteMapping("/{productId}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable String productId) {
-        // 这里需要实现删除逻辑
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<?> deleteProduct(@PathVariable String productId) {
+        try {
+            // 参数校验
+            if (productId == null || productId.trim().isEmpty()) {
+                return ResponseEntity.badRequest().body("商品ID不能为空");
+            }
+            
+            boolean deleted = productService.deleteProduct(productId);
+            if (deleted) {
+                return ResponseEntity.noContent().build();
+            } else {
+                return ResponseEntity.status(500).body("删除商品失败");
+            }
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("删除商品时发生错误: " + e.getMessage());
+        }
     }
 }
 

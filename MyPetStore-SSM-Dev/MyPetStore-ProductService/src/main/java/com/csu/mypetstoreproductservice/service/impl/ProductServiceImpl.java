@@ -138,5 +138,81 @@ public class ProductServiceImpl implements ProductService {
         int itemQuantity = inventoryMapper.selectById(itemId).getQuantity();
         return quantity <= itemQuantity;
     }
+
+    @Override
+    public Product createProduct(Product product) {
+        // 检查商品ID是否已存在
+        Product existingProduct = productMapper.selectById(product.getProductId());
+        if (existingProduct != null) {
+            throw new RuntimeException("商品ID已存在: " + product.getProductId());
+        }
+        
+        // 验证分类是否存在
+        if (product.getCategoryId() != null && !CATEGORY_LIST.contains(product.getCategoryId())) {
+            throw new RuntimeException("无效的分类ID: " + product.getCategoryId());
+        }
+        
+        // 设置默认值
+        if (product.getModifying() == 0) {
+            product.setModifying(0); // 默认值
+        }
+        
+        // 插入商品
+        int result = productMapper.insert(product);
+        if (result > 0) {
+            return productMapper.selectById(product.getProductId());
+        } else {
+            throw new RuntimeException("创建商品失败");
+        }
+    }
+
+    @Override
+    public Product updateProduct(String productId, Product product) {
+        // 检查商品是否存在
+        Product existingProduct = productMapper.selectById(productId);
+        if (existingProduct == null) {
+            throw new RuntimeException("商品不存在: " + productId);
+        }
+        
+        // 验证分类是否存在（如果提供了分类ID）
+        if (product.getCategoryId() != null && !CATEGORY_LIST.contains(product.getCategoryId())) {
+            throw new RuntimeException("无效的分类ID: " + product.getCategoryId());
+        }
+        
+        // 设置商品ID（确保使用路径参数中的ID）
+        product.setProductId(productId);
+        
+        // 更新商品
+        int result = productMapper.updateById(product);
+        if (result > 0) {
+            return productMapper.selectById(productId);
+        } else {
+            throw new RuntimeException("更新商品失败");
+        }
+    }
+
+    @Override
+    public boolean deleteProduct(String productId) {
+        // 检查商品是否存在
+        Product existingProduct = productMapper.selectById(productId);
+        if (existingProduct == null) {
+            throw new RuntimeException("商品不存在: " + productId);
+        }
+        
+        // 检查是否有关联的Item（可选：根据业务需求决定是否允许删除有关联Item的商品）
+        QueryWrapper<Item> itemQueryWrapper = new QueryWrapper<>();
+        itemQueryWrapper.eq("productid", productId);
+        List<Item> items = itemMapper.selectList(itemQueryWrapper);
+        if (!items.isEmpty()) {
+            // 如果业务要求删除商品时同时删除关联的Item，可以在这里实现
+            // 目前我们只删除商品，保留Item（或者抛出异常）
+            // 这里选择抛出异常，提示先删除关联的Item
+            throw new RuntimeException("无法删除商品，该商品下还有 " + items.size() + " 个Item。请先删除关联的Item。");
+        }
+        
+        // 删除商品
+        int result = productMapper.deleteById(productId);
+        return result > 0;
+    }
 }
 
