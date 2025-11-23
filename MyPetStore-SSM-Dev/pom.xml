@@ -29,6 +29,7 @@
     </scm>
     <modules>
         <module>MyPetStore-UserService</module>
+        <module>gateway-service</module>
     </modules>
     <properties>
         <java.version>21</java.version>
@@ -61,10 +62,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
+<!--        Spring MVC found on classpath, which is incompatible with Spring Cloud Gateway.-->
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-starter-web</artifactId>-->
+<!--        </dependency>-->
+
 
         <dependency>
             <groupId>com.mysql</groupId>
