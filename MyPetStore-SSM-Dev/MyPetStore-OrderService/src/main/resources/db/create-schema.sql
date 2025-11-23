@@ -1,6 +1,6 @@
-CREATE DATABASE IF NOT EXISTS petstore_order;
+CREATE DATABASE IF NOT EXISTS mypetstore_order;
 
-USE petstore_order;
+USE mypetstore_order;
 
 CREATE TABLE `lineitem`  (
   `orderid` int NOT NULL,

@@ -1,4 +1,4 @@
-USE petstore_order;
+USE mypetstore_order;
 
 INSERT INTO `lineitem` VALUES (1000, 1, 'EST-19', 1, 15.50);
 INSERT INTO `lineitem` VALUES (1001, 1, 'EST-19', 1, 15.50);

@@ -17,7 +17,9 @@ spring:
         - id: user-route                # 路由 ID，保持唯一
           uri: lb://MyPetStore-UserService  # 目标地址。lb:// 代表 LoadBalancer，后面跟 Nacos 中的服务名
           predicates:
-            - Path=/api/user/** # 断言：如果请求路径以 /api/user/ 开头，就转发给用户服务
+            - Path=/api/v1/user/** # 断言：如果请求路径以 /api/v1/user/ 开头，就转发给用户服务
+          filters:
+            - RewritePath=/api/v1/user/(?<segment>.*), /api/v1/$\{segment} # 对请求路径进行重写
 
         # --- 路由配置 2：转发到商品服务 ---
         - id: product-route
@@ -26,3 +28,10 @@ spring:
             - Path=/api/v1/products/**
           filters:
             - StripPrefix=0
+  # 配置日志级别
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    reactor.netty.http.client: DEBUG
+    # 如果需要更详细的信息，可以添加以下配置
+    # org.springframework.web.reactive: DEBUG
