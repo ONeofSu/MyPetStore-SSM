@@ -1,6 +1,7 @@
 package com.csu.mypetstoreorderservice.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.csu.mypetstoreorderservice.client.UserClient;
 import com.csu.mypetstoreorderservice.entity.Order;
 import com.csu.mypetstoreorderservice.entity.OrderStatus;
 import com.csu.mypetstoreorderservice.persistence.OrderMapper;
@@ -8,6 +9,7 @@ import com.csu.mypetstoreorderservice.persistence.OrderStatusMapper;
 import com.csu.mypetstoreorderservice.service.LineItemService;
 import com.csu.mypetstoreorderservice.service.OrderService;
 import com.csu.mypetstoreorderservice.vo.OrderVo;
+import com.csu.mypetstoreorderservice.vo.UserAccountVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,8 @@ import java.util.List;
 
 @Service("orderService")
 public class OrderServiceImpl implements OrderService {
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(OrderServiceImpl.class);
+
     @Autowired
     OrderStatusMapper orderStatusMapper;
 
@@ -24,6 +28,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     LineItemService lineItemService;
+
+    @Autowired
+    UserClient userClient;
 
     @Override
     public List<OrderVo> getAllOrders() {
@@ -159,6 +166,10 @@ public class OrderServiceImpl implements OrderService {
 
             orderVos.add(orderVo);
         }
+        UserAccountVO userInfo = fetchUserInfo(userId);
+        for (OrderVo orderVo : orderVos) {
+            orderVo.setUserInfo(userInfo);
+        }
         return orderVos;
     }
 
@@ -250,7 +261,24 @@ public class OrderServiceImpl implements OrderService {
 
         //get order line items
         orderVo.setLineItems(lineItemService.getLineItemsById(order.getOrderId()));
+        orderVo.setUserInfo(fetchUserInfo(orderVo.getUserId()));
 
         return orderVo;
+    }
+
+    private UserAccountVO fetchUserInfo(String userId) {
+        if (userId == null || userId.isEmpty()) {
+            return null;
+        }
+        try {
+            UserAccountVO user = userClient.getUserByUsername(userId);
+            if (user != null) {
+                user.setPassword(null);
+            }
+            return user;
+        } catch (Exception ex) {
+            log.warn("Failed to fetch user info for {}: {}", userId, ex.getMessage());
+            return null;
+        }
     }
 }

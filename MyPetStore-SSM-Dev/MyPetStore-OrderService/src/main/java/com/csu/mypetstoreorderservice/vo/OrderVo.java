@@ -38,6 +38,7 @@ public class OrderVo {
     private String locale;
     private String status;
     private List<LineItem> lineItems = new ArrayList<LineItem>();
+    private UserAccountVO userInfo;
 
     public OrderVo() {
 

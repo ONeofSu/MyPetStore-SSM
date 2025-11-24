@@ -44,6 +44,7 @@ public class OrderController {
 
     @GetMapping("/user/{userId}")
     public List<OrderVo> getUserOrders(@PathVariable String userId) {
+        System.out.println("[request] /api/order/user/" + userId);
         return orderService.getUserOrders(userId);
     }
 

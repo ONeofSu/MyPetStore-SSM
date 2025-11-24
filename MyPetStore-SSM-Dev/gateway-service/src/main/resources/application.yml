@@ -28,6 +28,14 @@ spring:
             - Path=/api/v1/products/**
           filters:
             - StripPrefix=0
+
+        # --- 路由配置 3：转发到订单服务 ---
+        - id: order-route
+          uri: lb://order-service
+          predicates:
+            - Path=/api/v1/orders/**
+          filters:
+            - RewritePath=/api/v1/orders/(?<segment>.*), /api/order/$\{segment} # 对请求路径进行重写
   # 配置日志级别
 logging:
   level:
